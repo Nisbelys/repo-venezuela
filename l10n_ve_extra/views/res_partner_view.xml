@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_l10n_ve_extra" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n_ve_extra</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state_id']" position="after">
+                <field name="municipality_id"
+                       options="{'no_create': True}"
+                       invisible="country_code != 'VE'"/>
+                <field name="parish_id"
+                       options="{'no_create': True}"
+                       invisible="country_code != 'VE'"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_ve_responsibility_type_id"
+                       options="{'no_create': True}"
+                       invisible="country_code != 'VE'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
