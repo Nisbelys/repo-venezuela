@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         SEARCH VIEW
+    ================================================================ -->
+    <record id="view_mikrowisp_partner_search" model="ir.ui.view">
+        <field name="name">mikrowisp.partner.search</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search string="Buscar clientes Mikrowisp">
+
+                <field name="name" string="Nombre / Cédula / Código"
+                       filter_domain="[
+                           '|', '|',
+                           ('name', 'ilike', self),
+                           ('mikrowisp_cedula', 'ilike', self),
+                           ('mikrowisp_codigo', 'ilike', self)
+                       ]"/>
+                <field name="mikrowisp_plan" string="Plan"/>
+                <field name="mikrowisp_ip"   string="IP"/>
+                <field name="phone"          string="Teléfono"/>
+
+                <!-- Filtro por defecto -->
+                <filter name="filter_caracas"
+                        string="Caracas"
+                        domain="[('is_mikrowisp', '=', True), ('city', '=', 'Caracas')]"/>
+
+                <separator/>
+
+                <!-- Filtros por estado de suscripción -->
+                <filter name="filter_activo"
+                        string="Activo"
+                        domain="[('mikrowisp_estado', '=', 'ACTIVO')]"/>
+                <filter name="filter_suspendido"
+                        string="Suspendido"
+                        domain="[('mikrowisp_estado', '=', 'SUSPENDIDO')]"/>
+                <filter name="filter_cortado"
+                        string="Cortado"
+                        domain="[('mikrowisp_estado', '=', 'CORTADO')]"/>
+                <filter name="filter_retirado"
+                        string="Retirado"
+                        domain="[('mikrowisp_estado', '=', 'RETIRADO')]"/>
+
+                <separator/>
+
+                <!-- Filtros por estado de conexión PPP -->
+                <filter name="filter_online"
+                        string="En línea"
+                        domain="[('mikrowisp_service_status', '=', 'ONLINE')]"/>
+                <filter name="filter_offline"
+                        string="Fuera de línea"
+                        domain="[('mikrowisp_service_status', '=', 'OFFLINE')]"/>
+
+                <separator/>
+
+                <!-- Filtros financieros -->
+                <filter name="filter_con_deuda"
+                        string="Con deuda"
+                        domain="[('mikrowisp_facturas_nopagadas', '>', 0)]"/>
+
+                <!-- Agrupaciones -->
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_estado"
+                            string="Estado"
+                            context="{'group_by': 'mikrowisp_estado'}"/>
+                    <filter name="group_plan"
+                            string="Plan"
+                            context="{'group_by': 'mikrowisp_plan'}"/>
+                    <filter name="group_conexion"
+                            string="Conexión"
+                            context="{'group_by': 'mikrowisp_service_status'}"/>
+                </group>
+
+            </search>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         LIST VIEW
+    ================================================================ -->
+    <record id="view_mikrowisp_partner_list" model="ir.ui.view">
+        <field name="name">mikrowisp.partner.list</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list string="Clientes Mikrowisp"
+                  decoration-success="mikrowisp_estado == 'ACTIVO'"
+                  decoration-warning="mikrowisp_estado == 'SUSPENDIDO'"
+                  decoration-danger="mikrowisp_estado in ('RETIRADO', 'CORTADO')"
+                  sample="1">
+
+                <field name="name"                       string="Cliente"/>
+                <field name="mikrowisp_cedula"           string="Cédula"/>
+                <field name="mikrowisp_codigo"           string="Código"/>
+
+                <field name="mikrowisp_estado"
+                       string="Estado"
+                       widget="badge"
+                       decoration-success="mikrowisp_estado == 'ACTIVO'"
+                       decoration-warning="mikrowisp_estado == 'SUSPENDIDO'"
+                       decoration-danger="mikrowisp_estado in ('RETIRADO', 'CORTADO')"/>
+
+                <field name="mikrowisp_service_status"
+                       string="Conexión"
+                       widget="badge"
+                       decoration-success="mikrowisp_service_status == 'ONLINE'"
+                       decoration-danger="mikrowisp_service_status == 'OFFLINE'"/>
+
+                <field name="mikrowisp_plan"             string="Plan"               optional="show"/>
+                <field name="mikrowisp_ip"               string="IP"                 optional="show"/>
+                <field name="phone"                      string="Teléfono"           optional="show"/>
+                <field name="mobile"                     string="Móvil"              optional="hide"/>
+                <field name="mikrowisp_deuda"            string="Deuda ($)"          optional="show"/>
+                <field name="mikrowisp_facturas_nopagadas" string="Fact. pendientes" optional="show"/>
+                <field name="mikrowisp_last_sync"        string="Últ. sync"          optional="hide"/>
+
+                <!-- Oculto: necesario para decoraciones del list -->
+                <field name="is_mikrowisp"               column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         FORM VIEW  (hereda el formulario estándar de contactos)
+    ================================================================ -->
+    <record id="view_mikrowisp_partner_form" model="ir.ui.view">
+        <field name="name">mikrowisp.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Mikrowisp"
+                      name="page_mikrowisp"
+                      invisible="not is_mikrowisp">
+                    <group>
+                        <group string="Identificación Mikrowisp">
+                            <field name="mikrowisp_id"     string="ID Mikrowisp"/>
+                            <field name="mikrowisp_codigo" string="Código"/>
+                            <field name="mikrowisp_cedula" string="Cédula"/>
+                        </group>
+                        <group string="Estado">
+                            <field name="mikrowisp_estado"
+                                   string="Estado suscripción"
+                                   widget="badge"
+                                   decoration-success="mikrowisp_estado == 'ACTIVO'"
+                                   decoration-warning="mikrowisp_estado == 'SUSPENDIDO'"
+                                   decoration-danger="mikrowisp_estado in ('RETIRADO', 'CORTADO')"/>
+                            <field name="mikrowisp_service_status"
+                                   string="Conexión PPP"
+                                   widget="badge"
+                                   decoration-success="mikrowisp_service_status == 'ONLINE'"
+                                   decoration-danger="mikrowisp_service_status == 'OFFLINE'"/>
+                            <field name="mikrowisp_last_sync" string="Última sincronización"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Servicio de red">
+                            <field name="mikrowisp_plan" string="Plan"/>
+                            <field name="mikrowisp_ip"   string="IP asignada"/>
+                            <field name="mikrowisp_mac"  string="MAC"/>
+                        </group>
+                        <group string="Facturación Mikrowisp">
+                            <field name="mikrowisp_deuda"               string="Deuda total ($)"/>
+                            <field name="mikrowisp_facturas_nopagadas"  string="Facturas sin pagar"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         ACTION WINDOW
+    ================================================================ -->
+    <record id="action_mikrowisp_clientes" model="ir.actions.act_window">
+        <field name="name">Clientes Mikrowisp</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_mikrowisp', '=', True)]</field>
+        <field name="context">{'search_default_filter_caracas': 1}</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_mikrowisp_partner_list')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_mikrowisp_partner_form')}),
+        ]"/>
+    </record>
+
+    <!-- ================================================================
+         MENÚ (bajo Contactos)
+    ================================================================ -->
+    <menuitem id="menu_mikrowisp_clientes"
+              name="Clientes Mikrowisp"
+              parent="contacts.menu_contacts"
+              action="action_mikrowisp_clientes"
+              sequence="5"/>
+
+</odoo>
