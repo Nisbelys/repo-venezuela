@@ -60,7 +60,7 @@
                         domain="[('mikrowisp_facturas_nopagadas', '>', 0)]"/>
 
                 <!-- Agrupaciones -->
-                <group expand="0" string="Agrupar por">
+                <group>
                     <filter name="group_estado"
                             string="Estado"
                             context="{'group_by': 'mikrowisp_estado'}"/>
@@ -109,7 +109,6 @@
                 <field name="mikrowisp_plan"             string="Plan"               optional="show"/>
                 <field name="mikrowisp_ip"               string="IP"                 optional="show"/>
                 <field name="phone"                      string="Teléfono"           optional="show"/>
-                <field name="mobile"                     string="Móvil"              optional="hide"/>
                 <field name="mikrowisp_deuda"            string="Deuda ($)"          optional="show"/>
                 <field name="mikrowisp_facturas_nopagadas" string="Fact. pendientes" optional="show"/>
                 <field name="mikrowisp_last_sync"        string="Últ. sync"          optional="hide"/>
@@ -139,6 +138,7 @@
                             <field name="mikrowisp_cedula" string="Cédula"/>
                         </group>
                         <group string="Estado">
+                            <field name="mikrowisp_zona"          string="Zona"/>
                             <field name="mikrowisp_estado"
                                    string="Estado suscripción"
                                    widget="badge"
@@ -170,28 +170,18 @@
     </record>
 
     <!-- ================================================================
-         ACTION WINDOW
+         ACTION — todos los clientes Mikrowisp (todas las zonas)
     ================================================================ -->
-    <record id="action_mikrowisp_clientes" model="ir.actions.act_window">
+    <record id="action_mikrowisp_clientes_todos" model="ir.actions.act_window">
         <field name="name">Clientes Mikrowisp</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">list,form</field>
         <field name="domain">[('is_mikrowisp', '=', True)]</field>
-        <field name="context">{'search_default_filter_caracas': 1}</field>
+        <field name="search_view_id" ref="view_mikrowisp_partner_search"/>
         <field name="view_ids" eval="[
             (5, 0, 0),
             (0, 0, {'view_mode': 'list', 'view_id': ref('view_mikrowisp_partner_list')}),
-            (0, 0, {'view_mode': 'form', 'view_id': ref('view_mikrowisp_partner_form')}),
         ]"/>
     </record>
-
-    <!-- ================================================================
-         MENÚ (bajo Contactos)
-    ================================================================ -->
-    <menuitem id="menu_mikrowisp_clientes"
-              name="Clientes Mikrowisp"
-              parent="contacts.menu_contacts"
-              action="action_mikrowisp_clientes"
-              sequence="5"/>
 
 </odoo>

@@ -9,6 +9,11 @@ class ResPartner(models.Model):
         default=False,
         index=True,
     )
+    mikrowisp_zona = fields.Char(
+        string='Zona',
+        index=True,
+        readonly=True,
+    )
     mikrowisp_id = fields.Integer(
         string='ID Mikrowisp',
         index=True,

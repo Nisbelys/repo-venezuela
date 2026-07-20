@@ -1,1 +1,8 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mikrowisp_estado_log_user,mikrowisp.estado.log.user,model_mikrowisp_estado_log,base.group_user,1,0,0,0
+access_mikrowisp_estado_log_system,mikrowisp.estado.log.system,model_mikrowisp_estado_log,base.group_system,1,1,1,1
+access_mikrowisp_dashboard_estado_user,mikrowisp.dashboard.estado.user,model_mikrowisp_dashboard_estado,base.group_user,1,0,0,0
+access_mikrowisp_dashboard_recaudacion_anual_user,mikrowisp.dashboard.recaudacion.anual.user,model_mikrowisp_dashboard_recaudacion_anual,base.group_user,1,0,0,0
+access_mikrowisp_dashboard_movimientos_anual_user,mikrowisp.dashboard.movimientos.anual.user,model_mikrowisp_dashboard_movimientos_anual,base.group_user,1,0,0,0
+access_mikrowisp_factura_user,mikrowisp.factura.user,model_mikrowisp_factura,base.group_user,1,0,0,0
+access_mikrowisp_factura_system,mikrowisp.factura.system,model_mikrowisp_factura,base.group_system,1,1,1,1

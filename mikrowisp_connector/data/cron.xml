@@ -1,14 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="cron_mikrowisp_sync" model="ir.cron">
-        <field name="name">Mikrowisp: Sincronizar clientes</field>
-        <field name="model_id" ref="base.model_res_partner"/>
-        <field name="state">code</field>
-        <field name="code">env['mikrowisp.sync'].cron_sync_clients()</field>
-        <field name="interval_number">15</field>
-        <field name="interval_type">minutes</field>
-        <field name="numbercall">-1</field>
-        <field name="active">False</field>
-        <field name="priority">10</field>
-    </record>
+    <data noupdate="1">
+
+        <!-- ================================================================
+             Clientes — un cron independiente por zona, para que el timeout
+             o una falla en una zona no retrase ni bloquee a las demás.
+        ================================================================ -->
+        <record id="cron_mikrowisp_sync_caracas" model="ir.cron">
+            <field name="name">Mikrowisp: Sincronizar clientes — Caracas</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">env['mikrowisp.sync.caracas'].cron_sync_clients()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active">True</field>
+            <field name="priority">10</field>
+        </record>
+
+        <record id="cron_mikrowisp_sync_llanos" model="ir.cron">
+            <field name="name">Mikrowisp: Sincronizar clientes — Los Llanos</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">env['mikrowisp.sync.llanos'].cron_sync_clients()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active">True</field>
+            <field name="priority">10</field>
+        </record>
+
+        <record id="cron_mikrowisp_sync_puentehierro" model="ir.cron">
+            <field name="name">Mikrowisp: Sincronizar clientes — Puente Hierro</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">env['mikrowisp.sync.puentehierro'].cron_sync_clients()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active">True</field>
+            <field name="priority">10</field>
+        </record>
+
+        <record id="cron_mikrowisp_sync_ocumare" model="ir.cron">
+            <field name="name">Mikrowisp: Sincronizar clientes — Ocumare</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">env['mikrowisp.sync.ocumare'].cron_sync_clients()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active">True</field>
+            <field name="priority">10</field>
+        </record>
+
+        <!-- ================================================================
+             Facturas — un cron independiente por zona
+        ================================================================ -->
+        <record id="cron_mikrowisp_sync_facturas_caracas" model="ir.cron">
+            <field name="name">Mikrowisp: Sincronizar facturas — Caracas</field>
+            <field name="model_id" ref="model_mikrowisp_factura"/>
+            <field name="state">code</field>
+            <field name="code">env['mikrowisp.sync.caracas'].cron_sync_facturas()</field>
+            <field name="interval_number">6</field>
+            <field name="interval_type">hours</field>
+            <field name="active">True</field>
+            <field name="priority">10</field>
+        </record>
+
+        <record id="cron_mikrowisp_sync_facturas_llanos" model="ir.cron">
+            <field name="name">Mikrowisp: Sincronizar facturas — Los Llanos</field>
+            <field name="model_id" ref="model_mikrowisp_factura"/>
+            <field name="state">code</field>
+            <field name="code">env['mikrowisp.sync.llanos'].cron_sync_facturas()</field>
+            <field name="interval_number">6</field>
+            <field name="interval_type">hours</field>
+            <field name="active">True</field>
+            <field name="priority">10</field>
+        </record>
+
+        <record id="cron_mikrowisp_sync_facturas_puentehierro" model="ir.cron">
+            <field name="name">Mikrowisp: Sincronizar facturas — Puente Hierro</field>
+            <field name="model_id" ref="model_mikrowisp_factura"/>
+            <field name="state">code</field>
+            <field name="code">env['mikrowisp.sync.puentehierro'].cron_sync_facturas()</field>
+            <field name="interval_number">6</field>
+            <field name="interval_type">hours</field>
+            <field name="active">True</field>
+            <field name="priority">10</field>
+        </record>
+
+        <record id="cron_mikrowisp_sync_facturas_ocumare" model="ir.cron">
+            <field name="name">Mikrowisp: Sincronizar facturas — Ocumare</field>
+            <field name="model_id" ref="model_mikrowisp_factura"/>
+            <field name="state">code</field>
+            <field name="code">env['mikrowisp.sync.ocumare'].cron_sync_facturas()</field>
+            <field name="interval_number">6</field>
+            <field name="interval_type">hours</field>
+            <field name="active">True</field>
+            <field name="priority">10</field>
+        </record>
+
+    </data>
 </odoo>
